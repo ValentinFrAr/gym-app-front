@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./views/Home";
+import Login from "./views/Login";
 import injectContext from "./store/AppContext";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
