@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-1: #F3D400;
+  --color-2: #B34C11;
+  --color-3: #000000;
+  --color-4: #ffffff;
+}
+
+html{
+  overflow-x: hidden;
+  min-height: 100vh!important;
+  position: relative;
+}
+
+body{
+  background-color: var(--color-1);
+  color: var(--color-3);
+  overflow-x: hidden;
+  min-height: 100vh!important;
+  position: relative;
+  padding-bottom: 3rem;
+  
+}
+
+footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
