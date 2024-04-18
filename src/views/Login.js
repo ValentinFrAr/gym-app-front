@@ -11,14 +11,12 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(actions);
-    console.log("hola");
+    console.log(actions.login);
     if (password === "") {
       return actions.showNotification("Contraseña incompleta", "danger");
     }
     try {
       const response = await actions.login(email, password);
-      console.log(store.test);
       console.log(response);
       if (
         response?.status &&

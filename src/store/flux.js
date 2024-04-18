@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const token = Cookies.get("jwt");
 const config = {
@@ -17,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       user: [],
+      userData: {},
       isAuth: false,
       test: "test store",
     },
@@ -63,7 +65,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
       login: async (email, password) => {
-        console.log("login flux");
         try {
           const response = await axios.post(`${API}/login`, {
             email: email,
@@ -75,7 +76,9 @@ const getState = ({ getStore, getActions, setStore }) => {
             const store = getStore();
             Cookies.set("jwt", data.token);
             console.log(data);
-            setStore({ ...store, isAuth: true, user: data.user });
+            const user = jwtDecode(data.token);
+            console.log(user);
+            setStore({ ...store, isAuth: true, user: user });
             return data;
           }
         } catch (error) {
@@ -105,6 +108,19 @@ const getState = ({ getStore, getActions, setStore }) => {
               return error.response.data.message;
             }
           }
+        }
+      },
+      getUserData: async (id) => {
+        try {
+          const response = await axios.get(`${API}/user/${id}`);
+          const data = response.data;
+          const store = getStore();
+          const decodedToken = jwtDecode(data.token);
+          console.log(decodedToken);
+          setStore({ ...store, userData: decodedToken.user });
+          return true;
+        } catch (error) {
+          console.error("Error getting user data", error);
         }
       },
     },
