@@ -3,6 +3,7 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import injectContext from "./store/AppContext";
 import Test from "./views/Test";
+import Register from "./views/Register";
 
 function App() {
   const basename = process.env.BASENAME || "";
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/test/:id" element={<Test />} />
       </Routes>
     </BrowserRouter>

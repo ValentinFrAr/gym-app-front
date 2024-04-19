@@ -18,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       user: [],
+      users: [],
       userData: {},
       isAuth: false,
       test: "test store",
@@ -33,6 +34,13 @@ const getState = ({ getStore, getActions, setStore }) => {
           day: "numeric",
         });
       },
+
+      /*************************************
+        
+            AUTH FUNCTIONS
+
+     ***************************************/
+
       register: async (
         firstname,
         lastname,
@@ -116,11 +124,50 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = response.data;
           const store = getStore();
           const decodedToken = jwtDecode(data.token);
-          console.log(decodedToken);
           setStore({ ...store, userData: decodedToken.user });
-          return true;
+          return decodedToken.user;
         } catch (error) {
           console.error("Error getting user data", error);
+        }
+      },
+      getAllUsers: async () => {
+        try {
+          const response = await axios.get(`${API}/users`);
+          const data = response.data;
+          const store = getStore();
+          const decodedToken = jwtDecode(data.codedData);
+          setStore({ ...store, users: decodedToken.users });
+        } catch (error) {
+          console.error("Error getting users", error);
+        }
+      },
+
+      /**************************
+     
+      PROGRAMS FUNCTIONS
+
+       *************************/
+
+      createProgram: async (
+        name,
+        description,
+        weekly_routine,
+        duration_program,
+        userId
+      ) => {
+        const actions = getActions();
+        try {
+          const response = await axios.post(`${API}/create-program/${userId}`, {
+            name,
+            description,
+            weekly_routine,
+            duration_program,
+            userId,
+          });
+          return response.data;
+        } catch (error) {
+          console.error("Error creating program:", error);
+          throw error;
         }
       },
     },
