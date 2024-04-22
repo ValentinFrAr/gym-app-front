@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import injectContext from "./store/AppContext";
-import Test from "./views/Test";
 import Register from "./views/Register";
+import UsersTable from "./components/UsersTable";
 
 function App() {
   const basename = process.env.BASENAME || "";
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/test/:id" element={<Test />} />
+        <Route path="/users" element={<UsersTable />} />
       </Routes>
     </BrowserRouter>
   );

@@ -12,13 +12,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(actions.login);
     if (password === "") {
       return actions.showNotification("Contraseña incompleta", "danger");
     }
     try {
       const response = await actions.login(email, password);
-      console.log(response);
       if (
         response?.status &&
         (response?.status === 201 || response?.status === 200)

@@ -21,14 +21,14 @@ const getState = ({ getStore, getActions, setStore }) => {
       users: [],
       userData: {},
       isAuth: false,
-      test: "test store",
+      plans: [],
     },
     actions: {
       showNotification: async (message, type) => {
         setStore({ response: { message, type } });
       },
       dateFormater: (date) => {
-        return new Date(date).toLocaleDateString("es-ES", {
+        return new Date(date).toLocaleDateString("en-CA", {
           year: "numeric",
           month: "numeric",
           day: "numeric",
@@ -106,7 +106,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             if (response.status && response.status === 200) {
               const data = await response.data;
               const store = getStore();
-              console.log(data);
               if (data.user) {
                 setStore({ ...store, isAuth: true, user: data.user });
               }
@@ -120,7 +119,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getUserData: async (id) => {
         try {
-          const response = await axios.get(`${API}/user/${id}`);
+          const response = await axios.get(`${API}/user/${id}`, config);
           const data = response.data;
           const store = getStore();
           const decodedToken = jwtDecode(data.token);
@@ -132,13 +131,58 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getAllUsers: async () => {
         try {
-          const response = await axios.get(`${API}/users`);
+          const response = await axios.get(`${API}/users`, config);
           const data = response.data;
           const store = getStore();
           const decodedToken = jwtDecode(data.codedData);
           setStore({ ...store, users: decodedToken.users });
         } catch (error) {
           console.error("Error getting users", error);
+        }
+      },
+      updateUserData: async (email, phone, address, is_admin, password, id) => {
+        const actions = getActions();
+        try {
+          const req = await axios.put(
+            `${API}/update/${id}`,
+            {
+              email,
+              phone,
+              address,
+              is_admin,
+              password,
+              id,
+            },
+            config
+          );
+          actions.showNotification("Modificacion exitosa", "success");
+          return req;
+        } catch (error) {
+          actions.showNotification(
+            "Error al modificar datos, comprueba la informacion",
+            "danger"
+          );
+        }
+      },
+      deleteUser: async (userId) => {
+        try {
+          const response = await axios.delete(
+            `${API}/delete/${userId}`,
+            config
+          );
+          console.log(response);
+          if (response.status === 200) {
+            setStore((prevStore) => {
+              const updatedUsers = prevStore.users.filter(
+                (user) => user.id !== userId
+              );
+              // actions.showNotification("User deleted successfully", "success");
+              console.log("deleted FROM FLUX");
+              return { ...prevStore, users: updatedUsers };
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting user", error);
         }
       },
 
@@ -168,6 +212,25 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error creating program:", error);
           throw error;
+        }
+      },
+
+      /**************************
+     
+      PLANS FUNCTIONS
+
+       *************************/
+
+      getAllPlans: async () => {
+        try {
+          const response = await axios.get(`${API}/get-plans`, config);
+          const data = response.data;
+          const store = getStore();
+          setStore({ ...store, plans: data.plans });
+
+          return true;
+        } catch (error) {
+          console.error("Error getting plans from flux.js", error);
         }
       },
     },
