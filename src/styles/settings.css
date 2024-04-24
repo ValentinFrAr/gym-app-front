@@ -31,3 +31,19 @@ footer{
   bottom: 0;
   width: 100%;
 }
+
+
+.react-confirm-alert-overlay{
+  position: relative!important;
+  margin: auto;
+  background: url(https://www.shutterstock.com/image-illustration/collection-gold-objects-golden-dumbbells-260nw-478650379.jpg)!important;
+  background-position: center!important;
+  background-repeat: no-repeat!important;
+  background-size: cover!important;
+  border-radius: 20px;
+  border: 1px solid var(--color-2);
+}
+
+.message-confirm{
+  color: var(--color-2)!important;
+}

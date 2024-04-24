@@ -140,7 +140,17 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error getting users", error);
         }
       },
-      updateUserData: async (email, phone, address, is_admin, password, id) => {
+      updateUserData: async (
+        email,
+        phone,
+        address,
+        is_admin,
+        password,
+        id,
+        photoUrl,
+        firstname,
+        lastname
+      ) => {
         const actions = getActions();
         try {
           const req = await axios.put(
@@ -151,6 +161,9 @@ const getState = ({ getStore, getActions, setStore }) => {
               address,
               is_admin,
               password,
+              photoUrl, // Ajoutez la photoUrl à la requête
+              firstname, // Ajoutez le firstname à la requête
+              lastname, // Ajoutez le lastname à la requête
               id,
             },
             config

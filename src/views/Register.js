@@ -125,7 +125,7 @@ const Register = () => {
         />
         <div className="span-forgot-signup">
           <span className="forgot-password">
-            <a href="#">Do you already have an account? Sign In</a>
+            <a href="#!">Do you already have an account? Sign In</a>
           </span>
         </div>
         <input value="Sign In" type="submit" className="login-button" />
@@ -146,7 +146,7 @@ const Register = () => {
         </div>
       </div>
       <span className="agreement">
-        <a href="#">Learn user licence agreement</a>
+        <a href="#!">Learn user licence agreement</a>
       </span>
     </div>
   );
