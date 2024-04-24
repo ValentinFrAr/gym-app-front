@@ -1,10 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/AppContext";
+import { useNavigate } from "react-router-dom";
+import ConfirmAlertDelete from "./ConfirmAlertDelete";
 
 const UsersTable = () => {
   const { store, actions } = useContext(Context);
   const [users, setUsers] = useState(store.users);
+  let navigate = useNavigate();
 
   const getAllUsersAndPlans = async () => {
     try {
@@ -31,16 +34,20 @@ const UsersTable = () => {
     }
   }, [store.user.id, users]);
 
+  const handleEdit = (user) => {
+    navigate(`/edit-user/${user.user_id}`, { state: { userData: user } });
+  };
+
   return (
     <>
       {store.user.is_admin ? (
         <section style={{ textAlign: "center" }}>
           <div>
+            <div>
+              <h1>Users</h1>
+            </div>
             <table>
               <thead>
-                <tr>
-                  <th>Users</th>
-                </tr>
                 <tr>
                   <th>firstname</th>
                   <th>lastname</th>
@@ -66,8 +73,12 @@ const UsersTable = () => {
                       <td>{user.plan}</td>
                       <td>{user.expires_date}</td>
                       <td>
-                        <button onClick={() => handleDelete(user.user_id)}>
-                          X
+                        <ConfirmAlertDelete
+                          onConfirm={() => handleDelete(user.user_id)}
+                          message={`Are you sure you want to delete ${user.firstname} ${user.lastname} ?`}
+                        />
+                        <button onClick={() => handleEdit(user)}>
+                          &#9998;
                         </button>
                       </td>
                     </tr>

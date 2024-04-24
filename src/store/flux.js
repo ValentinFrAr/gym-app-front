@@ -140,7 +140,17 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error getting users", error);
         }
       },
-      updateUserData: async (email, phone, address, is_admin, password, id) => {
+      updateUserData: async (
+        email,
+        phone,
+        address,
+        is_admin,
+        password,
+        id,
+        photoUrl,
+        firstname,
+        lastname
+      ) => {
         const actions = getActions();
         try {
           const req = await axios.put(
@@ -151,6 +161,9 @@ const getState = ({ getStore, getActions, setStore }) => {
               address,
               is_admin,
               password,
+              photoUrl, // Ajoutez la photoUrl à la requête
+              firstname, // Ajoutez le firstname à la requête
+              lastname, // Ajoutez le lastname à la requête
               id,
             },
             config
@@ -212,25 +225,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error creating program:", error);
           throw error;
-        }
-      },
-
-      /**************************
-     
-      PLANS FUNCTIONS
-
-       *************************/
-
-      getAllPlans: async () => {
-        try {
-          const response = await axios.get(`${API}/get-plans`, config);
-          const data = response.data;
-          const store = getStore();
-          setStore({ ...store, plans: data.plans });
-
-          return true;
-        } catch (error) {
-          console.error("Error getting plans from flux.js", error);
         }
       },
     },
