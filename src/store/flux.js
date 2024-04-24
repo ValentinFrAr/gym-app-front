@@ -21,7 +21,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       users: [],
       userData: {},
       isAuth: false,
-      plans: [],
+      plan: [],
     },
     actions: {
       showNotification: async (message, type) => {
@@ -214,17 +214,102 @@ const getState = ({ getStore, getActions, setStore }) => {
       ) => {
         const actions = getActions();
         try {
-          const response = await axios.post(`${API}/create-program/${userId}`, {
-            name,
-            description,
-            weekly_routine,
-            duration_program,
-            userId,
-          });
+          const response = await axios.post(
+            `${API}/create-program/${userId}`,
+            {
+              name,
+              description,
+              weekly_routine,
+              duration_program,
+              userId,
+            },
+            config
+          );
           return response.data;
         } catch (error) {
           console.error("Error creating program:", error);
           throw error;
+        }
+      },
+      modificateProgram: async (
+        id,
+        name,
+        description,
+        weekly_routine,
+        duration_program
+      ) => {
+        try {
+          const response = axios.put(
+            `${API}/modificate-program/${id}`,
+            { name, description, weekly_routine, duration_program },
+            config
+          );
+          return response.data;
+        } catch (error) {
+          console.error("Error updating program:", error);
+          throw error;
+        }
+      },
+      deleteProgram: async (id) => {
+        try {
+          const response = axios.delete(`${API}/delete-program/${id}`, config);
+          return response.data;
+        } catch (error) {
+          console.error("Error deleting program:", error);
+          throw error;
+        }
+      },
+      getAllPrograms: async (id) => {
+        try {
+          const response = axios.get(`${API}/get-all-programs`);
+          return response.data;
+        } catch (error) {
+          console.error("Error getting all programs:", error);
+          throw error;
+        }
+      },
+      getProgram: async (id) => {
+        try {
+          const response = axios.get(`${API}/get-program/${id}`);
+          return response.data;
+        } catch (error) {
+          console.error("Error getting program:", error);
+          throw error;
+        }
+      },
+
+      /**************************
+     
+      PLANS FUNCTIONS
+
+       *************************/
+
+      subscribePlan: async (
+        id,
+        plan,
+        expires_date,
+        email,
+        firstname,
+        lastname
+      ) => {
+        try {
+          const response = await axios.put(
+            `${API}/subscribe_plan/${id}`,
+            {
+              plan,
+              expires_date,
+              email,
+              firstname,
+              lastname,
+            },
+            config
+          );
+          const data = response.data;
+          const store = getStore();
+          setStore({ ...store, plan: data.plan });
+          return data.message;
+        } catch (error) {
+          console.error("Error subscribing to", error);
         }
       },
     },
