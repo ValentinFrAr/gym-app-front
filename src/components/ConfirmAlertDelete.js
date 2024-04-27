@@ -5,7 +5,6 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 const ConfirmAlertDelete = ({ onConfirm, message }) => {
   const handleClickDelete = () => {
     onConfirm();
-    alert("User deleted !");
   };
 
   const customUI = ({ onClose }) => (

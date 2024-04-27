@@ -148,3 +148,11 @@
   color: #0099ff;
   font-size: 9px;
 }
+
+.form .cancel-btn{
+  background: linear-gradient(
+    45deg,
+    var(--color-2) 0%,
+    var(--color-2) 100%
+  );
+}

@@ -21,7 +21,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       users: [],
       userData: {},
       isAuth: false,
-      plan: [],
+      plans: [],
+      recipes: [],
     },
     actions: {
       showNotification: async (message, type) => {
@@ -198,6 +199,16 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error deleting user", error);
         }
       },
+      logout: () => {
+        const store = getStore();
+        let token = Cookies.remove("jwt");
+        setStore({
+          ...store,
+          isAuth: false,
+          response: { type: "success", message: "Successful logout." },
+        });
+        return token != null ? true : false;
+      },
 
       /**************************
      
@@ -310,6 +321,75 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data.message;
         } catch (error) {
           console.error("Error subscribing to", error);
+        }
+      },
+
+      /*************************
+       *
+       * RECIPES FUNCTIONS
+       *
+       **************************/
+
+      createRecipe: async (name, description, ingredients, objective) => {
+        try {
+          const response = await axios.post(
+            `${API}/create-recipe`,
+            { name, description, ingredients, objective },
+            config
+          );
+          if (response.status === 201) {
+            console.log("recipe created successfully");
+            return response.data;
+          }
+        } catch (error) {
+          console.error("error creating recipe from flux", error);
+        }
+      },
+      getAllRecipes: async () => {
+        try {
+          const response = await axios.get(`${API}//get-all-recipes`, config);
+          const data = response.data;
+          const store = setStore();
+          setStore({ ...store, recipes: data.recipes });
+          return data.recipes;
+        } catch (error) {
+          console.error("Error getting recipes", error);
+        }
+      },
+      deleteRecipe: async (recipeId) => {
+        try {
+          const response = await axios.delete(
+            `${API}/delete-recipe/${recipeId}`,
+            config
+          );
+          console.log(response);
+          if (response.status === 200) {
+            setStore((prevStore) => {
+              const updatedRecipes = prevStore.recipes.filter(
+                (recipe) => recipe.id !== recipeId
+              );
+              // actions.showNotification("User deleted successfully", "success");
+              console.log("deleted FROM FLUX");
+              return { ...prevStore, users: updatedRecipes };
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting user", error);
+        }
+      },
+      editRecipe: async (name, description, ingredients, objective, id) => {
+        try {
+          const response = await axios.put(
+            `${API}/update-recipe/${id}`,
+            { name, description, ingredients, objective, id },
+            config
+          );
+          if (response.status === 200) {
+            return response;
+          }
+        } catch (error) {
+          console.log("Error updating recipe", error);
+          throw error;
         }
       },
     },

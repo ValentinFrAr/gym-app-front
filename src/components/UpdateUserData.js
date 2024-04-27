@@ -10,7 +10,7 @@ const UpdateUserData = () => {
   const [address, setAddress] = useState(userData.address || "");
   const [password, setPassword] = useState(userData.password || "");
   const [isAdmin, setIsAdmin] = useState(userData.is_admin);
-  const [photo, setPhoto] = useState(null); // Nouvel état pour la photo
+  const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -129,8 +129,8 @@ const UpdateUserData = () => {
           <select
             id="adminStatus"
             className="input"
-            value={isAdmin ? "inactive" : "active"} // Sélection de la valeur en fonction de l'état isAdmin
-            onChange={(e) => setIsAdmin(e.target.value === "inactive")} // Mise à jour de l'état isAdmin
+            value={isAdmin ? "active" : "inactive"} // Sélection de la valeur en fonction de l'état isAdmin
+            onChange={(e) => setIsAdmin(e.target.value === "active")} // Mise à jour de l'état isAdmin
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -140,7 +140,7 @@ const UpdateUserData = () => {
           <input value="Update" type="submit" className="login-button" />
           <input
             value="Cancel"
-            className="login-button"
+            className="login-button cancel-btn"
             type="button"
             onClick={() => navigate("/users")}
           />
