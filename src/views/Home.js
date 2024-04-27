@@ -13,6 +13,12 @@ const Home = () => {
       <br />
       <br />
       <button onClick={() => navigate(`/users`)}>Go To Users Table</button>
+      <br />
+      <br />
+      <button onClick={() => navigate(`/recipe`)}>Go To Create Recipe</button>
+      <br />
+      <br />
+      <button onClick={() => navigate(`/recipes`)}>Go To All Recipes</button>
     </div>
   );
 };

@@ -77,7 +77,10 @@ const UsersTable = () => {
                           onConfirm={() => handleDelete(user.user_id)}
                           message={`Are you sure you want to delete ${user.firstname} ${user.lastname} ?`}
                         />
-                        <button onClick={() => handleEdit(user)}>
+                        <button
+                          className="btn-table"
+                          onClick={() => handleEdit(user)}
+                        >
                           &#9998;
                         </button>
                       </td>
