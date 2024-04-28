@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/AppContext";
 import ConfirmAlertDelete from "./ConfirmAlertDelete";
 import { useNavigate } from "react-router";
+import FavoriteIcon from "./FavoriteIcon";
 
 const AllRecipes = () => {
   const { store, actions } = useContext(Context);
@@ -73,6 +74,7 @@ const AllRecipes = () => {
               {store.user.id === recipe.user_id && (
                 <button onClick={() => handleEdit(recipe)}>&#9998;</button>
               )}
+              <FavoriteIcon recipeId={recipe.id} userId={recipe.user_id} />
             </div>
           </div>
         ))

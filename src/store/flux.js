@@ -23,6 +23,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       isAuth: false,
       plans: [],
       recipes: [],
+      recipeData: {},
+      favoritedRecipes: [],
     },
     actions: {
       showNotification: async (message, type) => {
@@ -36,11 +38,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         });
       },
 
-      /*************************************
+      /******************************************************************************************
         
-            AUTH FUNCTIONS
+            ********************************AUTH FUNCTIONS
 
-     ***************************************/
+     ********************************************************************************************/
 
       register: async (
         firstname,
@@ -210,11 +212,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         return token != null ? true : false;
       },
 
-      /**************************
+      /****************************************************************************************
      
-      PROGRAMS FUNCTIONS
+      *************************************PROGRAMS FUNCTIONS
 
-       *************************/
+       ***************************************************************************************/
 
       createProgram: async (
         name,
@@ -239,7 +241,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error creating program:", error);
-          throw error;
         }
       },
       modificateProgram: async (
@@ -258,7 +259,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error updating program:", error);
-          throw error;
         }
       },
       deleteProgram: async (id) => {
@@ -267,7 +267,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error deleting program:", error);
-          throw error;
         }
       },
       getAllPrograms: async (id) => {
@@ -276,7 +275,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error getting all programs:", error);
-          throw error;
         }
       },
       getProgram: async (id) => {
@@ -285,15 +283,14 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error getting program:", error);
-          throw error;
         }
       },
 
-      /**************************
+      /******************************************************************************************
      
-      PLANS FUNCTIONS
+      ****************************************PLANS FUNCTIONS
 
-       *************************/
+       *****************************************************************************************/
 
       subscribePlan: async (
         id,
@@ -324,11 +321,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      /*************************
+      /******************************************************************************************
        *
-       * RECIPES FUNCTIONS
+       ***************************************** RECIPES FUNCTIONS
        *
-       **************************/
+       *******************************************************************************************/
 
       createRecipe: async (name, description, ingredients, objective) => {
         try {
@@ -349,11 +346,22 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const response = await axios.get(`${API}//get-all-recipes`, config);
           const data = response.data;
-          const store = setStore();
+          const store = getStore();
           setStore({ ...store, recipes: data.recipes });
           return data.recipes;
         } catch (error) {
           console.error("Error getting recipes", error);
+        }
+      },
+      getRecipeById: async (id) => {
+        try {
+          const res = await axios.get(`${API}/get-recipe/${id}`, config);
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, recipeData: data.recipe });
+          return data.recipe;
+        } catch (error) {
+          console.error("Error getting your recipe", error);
         }
       },
       deleteRecipe: async (recipeId) => {
@@ -370,7 +378,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               );
               // actions.showNotification("User deleted successfully", "success");
               console.log("deleted FROM FLUX");
-              return { ...prevStore, users: updatedRecipes };
+              return { ...prevStore, recipes: updatedRecipes };
             });
           }
         } catch (error) {
@@ -389,7 +397,57 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
         } catch (error) {
           console.log("Error updating recipe", error);
-          throw error;
+        }
+      },
+      /*****************************************************************************************
+       *
+       ************************************* FAVORITES ROUTES
+       *
+       *****************************************************************************************/
+      addFavoriteRecipe: async (userId, recipeId) => {
+        const actions = getActions();
+        try {
+          const res = await axios.post(
+            `${API}/add-favorite-recipe`,
+            { userId, recipeId },
+            config
+          );
+          await actions.getFavoritedRecipes();
+        } catch (error) {
+          console.error("error adding favorite recipe", error);
+        }
+      },
+      deleteFavoritedRecipe: async (recipeId) => {
+        try {
+          const response = await axios.delete(
+            `${API}/delete-favorite-recipe/${recipeId}`,
+            config
+          );
+          if (response.status === 200) {
+            const store = getStore();
+            const updatedFavRecipes = store.favoritedRecipes.filter(
+              (recipe) => recipe.id !== recipeId
+            );
+
+            setStore({ ...store, favoritedRecipes: updatedFavRecipes });
+            console.log("favorite recipe deleted");
+          }
+        } catch (error) {
+          console.error("Error deleting favorited recipe", error);
+        }
+      },
+      getFavoritedRecipes: async () => {
+        try {
+          const res = await axios.get(
+            `${API}/get-all-favorite-recipes`,
+            config
+          );
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, favoritedRecipes: data.result });
+          return data.result;
+        } catch (error) {
+          console.error("error getting favorited recipes", error);
         }
       },
     },

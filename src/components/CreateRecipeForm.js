@@ -76,7 +76,7 @@ const CreateRecipeForm = () => {
             <textarea
               type="text"
               value={ingredients}
-              placeholder="1kg of chicken, 1kg of rice, 20g of chili, 500g pepperoni...."
+              placeholder="(Please respect this format => 1kg of chicken, 1kg of rice, 20g of chili, 500g pepperoni...) ."
               onChange={(e) => setIngredients(e.target.value)}
               required
             />
@@ -89,7 +89,7 @@ const CreateRecipeForm = () => {
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="cut the ingredients, put them in the bowl, add the chili, eat...."
+              placeholder="cut the ingredients, put them in the bowl, add the chili, eat, ...."
               required
             />
           </label>

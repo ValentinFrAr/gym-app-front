@@ -1,9 +1,10 @@
 import React from "react";
+import AllRecipes from "../components/AllRecipes";
 
 const Recipes = () => {
   return (
     <div>
-      <h1>RECIPES VIEW</h1>
+      <AllRecipes />
     </div>
   );
 };
