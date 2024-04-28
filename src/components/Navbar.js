@@ -7,8 +7,8 @@ const Navbar = () => {
   let navigate = useNavigate();
   function logout() {
     actions.logout();
-    window.location.reload();
     navigate("/");
+    window.location.reload();
   }
   return (
     <div>

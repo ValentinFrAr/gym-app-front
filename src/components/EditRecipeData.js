@@ -1,24 +1,24 @@
-import React, { useContext, useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/AppContext";
 import { useLocation, useNavigate } from "react-router";
 
 const EditRecipeData = () => {
   const { actions } = useContext(Context);
   const { recipeData } = useLocation().state;
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+
   const [name, setName] = useState(recipeData.recipe_name || "");
   const [objective, setObjective] = useState(recipeData.recipe_objective || "");
-  const [description, setDescription] = useState(
-    recipeData.recipe_description || ""
-  );
   const [ingredients, setIngredients] = useState(recipeData.ingredients || "");
+  const [steps, setSteps] = useState(recipeData.recipe_description || "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await actions.editRecipe(
         name,
-        description,
+        steps,
         ingredients,
         objective,
         recipeData.id
@@ -26,8 +26,45 @@ const EditRecipeData = () => {
       navigate("/recipes");
     } catch (error) {
       console.error("Error updating recipe data:", error);
-      throw error;
     }
+  };
+
+  const handleIngredientChange = (index, value) => {
+    // Copia el array de ingredientes separados por comas
+    const updatedIngredients = [...ingredients.split(",")];
+    // Reemplaza el elemento en el índice especificado por el nuevo valor
+    updatedIngredients[index] = value;
+    // Actualiza el estado de los ingredientes uniendo el array en una cadena con comas
+    setIngredients(updatedIngredients.join(","));
+  };
+
+  const handleStepChange = (index, value) => {
+    // Copia el array de pasos separados por comas
+    const updatedSteps = [...steps.split(",")];
+    // Reemplaza el elemento en el índice especificado por el nuevo valor
+    updatedSteps[index] = value;
+    // Actualiza el estado de los pasos uniendo el array en una cadena con comas
+    setSteps(updatedSteps.join(","));
+  };
+
+  const handleIngredientRemove = (index) => {
+    const updatedIngredients = [...ingredients.split(",")];
+    updatedIngredients.splice(index, 1);
+    setIngredients(updatedIngredients.join(","));
+  };
+
+  const handleStepRemove = (index) => {
+    const updatedSteps = [...steps.split(",")];
+    updatedSteps.splice(index, 1);
+    setSteps(updatedSteps.join(","));
+  };
+
+  const handleAddIngredient = () => {
+    setIngredients((prevIngredients) => prevIngredients + ",");
+  };
+
+  const handleAddStep = () => {
+    setSteps((prevSteps) => prevSteps + ",");
   };
 
   return (
@@ -62,31 +99,42 @@ const EditRecipeData = () => {
               <li key={index}>
                 <input
                   type="text"
-                  value={ingredient.trim()}
-                  onChange={(event) => {
-                    const updatedIngredients = [...ingredients.split(",")];
-                    updatedIngredients[index] = event.target.value;
-                    setIngredients(updatedIngredients.join(","));
-                  }}
+                  value={ingredient}
+                  onChange={(event) =>
+                    handleIngredientChange(index, event.target.value)
+                  }
                 />
+                <button
+                  type="button"
+                  onClick={() => handleIngredientRemove(index)}
+                >
+                  Remove
+                </button>
               </li>
             ))}
+            <button type="button" onClick={handleAddIngredient}>
+              Add
+            </button>
           </ul>
           <h4>Steps:</h4>
           <ol>
-            {description.split(",").map((step, index) => (
+            {steps.split(",").map((step, index) => (
               <li key={index}>
                 <input
                   type="text"
-                  value={step.trim()}
-                  onChange={(event) => {
-                    const updatedSteps = [...description.split(",")];
-                    updatedSteps[index] = event.target.value;
-                    setDescription(updatedSteps.join(","));
-                  }}
+                  value={step}
+                  onChange={(event) =>
+                    handleStepChange(index, event.target.value)
+                  }
                 />
+                <button type="button" onClick={() => handleStepRemove(index)}>
+                  Remove
+                </button>
               </li>
             ))}
+            <button type="button" onClick={handleAddStep}>
+              Add
+            </button>
           </ol>
           <input type="submit" value="Edit" />
         </form>
