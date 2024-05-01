@@ -25,6 +25,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       recipes: [],
       recipeData: {},
       favoritedRecipes: [],
+      usersImage: {},
     },
     actions: {
       showNotification: async (message, type) => {
@@ -36,6 +37,40 @@ const getState = ({ getStore, getActions, setStore }) => {
           month: "numeric",
           day: "numeric",
         });
+      },
+      uploadPhoto: async (userId, photoFile) => {
+        const actions = getActions();
+        try {
+          const formData = new FormData();
+          formData.append("photo", photoFile);
+
+          const response = await axios.post(
+            `${API}/update-photo/${userId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            },
+            config
+          );
+          return response;
+        } catch (error) {
+          console.error("Error uploading photo:", error);
+          return null;
+        }
+      },
+      getUserImage: async (userId) => {
+        try {
+          const res = axios.get(`${API}/get-photo/${userId}`, config);
+          const photoUrl = res.data.photoUrl;
+          const store = getStore();
+          setStore({ ...store, usersImage: photoUrl });
+          return photoUrl;
+        } catch (error) {
+          console.error("Error getting photo:", error);
+          return null;
+        }
       },
 
       /******************************************************************************************
