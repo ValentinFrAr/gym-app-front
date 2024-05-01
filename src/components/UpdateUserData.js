@@ -30,6 +30,7 @@ const UpdateUserData = () => {
         userData.firstname,
         userData.lastname
       );
+      console.log(formData, photo);
       navigate("/users");
     } catch (error) {
       console.error("Error updating user data:", error);

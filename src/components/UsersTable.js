@@ -7,6 +7,7 @@ import ConfirmAlertDelete from "./ConfirmAlertDelete";
 const UsersTable = () => {
   const { store, actions } = useContext(Context);
   const [users, setUsers] = useState(store.users);
+  const API = "http://localhost:5000/uploads/";
   let navigate = useNavigate();
 
   const getAllUsersAndPlans = async () => {
@@ -49,6 +50,7 @@ const UsersTable = () => {
             <table>
               <thead>
                 <tr>
+                  <th></th>
                   <th>firstname</th>
                   <th>lastname</th>
                   <th>phone</th>
@@ -64,6 +66,17 @@ const UsersTable = () => {
                 {store.users?.length > 0 &&
                   store.users.map((user) => (
                     <tr key={user.id}>
+                      <td>
+                        <img
+                          src={
+                            user.photo_url.startsWith("http")
+                              ? user.photo_url
+                              : API + user.photo_url
+                          }
+                          alt="user_image"
+                          width="50"
+                        />
+                      </td>
                       <td>{user.firstname}</td>
                       <td>{user.lastname}</td>
                       <td>{user.phone}</td>
