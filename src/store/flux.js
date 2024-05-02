@@ -24,6 +24,11 @@ const getState = ({ getStore, getActions, setStore }) => {
       plan: [],
       programs: [],
       programById: [],
+      plans: [],
+      recipes: [],
+      recipeData: {},
+      favoritedRecipes: [],
+      usersImage: {},
     },
     actions: {
       showNotification: async (message, type) => {
@@ -36,12 +41,46 @@ const getState = ({ getStore, getActions, setStore }) => {
           day: "numeric",
         });
       },
+      uploadPhoto: async (userId, photoFile) => {
+        const actions = getActions();
+        try {
+          const formData = new FormData();
+          formData.append("photo", photoFile);
 
-      /*************************************
+          const response = await axios.post(
+            `${API}/update-photo/${userId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            },
+            config
+          );
+          return response;
+        } catch (error) {
+          console.error("Error uploading photo:", error);
+          return null;
+        }
+      },
+      getUserImage: async (userId) => {
+        try {
+          const res = axios.get(`${API}/get-photo/${userId}`, config);
+          const photoUrl = res.data.photoUrl;
+          const store = getStore();
+          setStore({ ...store, usersImage: photoUrl });
+          return photoUrl;
+        } catch (error) {
+          console.error("Error getting photo:", error);
+          return null;
+        }
+      },
+
+      /******************************************************************************************
         
-            AUTH FUNCTIONS
+            ********************************AUTH FUNCTIONS
 
-     ***************************************/
+     ********************************************************************************************/
 
       register: async (
         firstname,
@@ -142,7 +181,17 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error getting users", error);
         }
       },
-      updateUserData: async (email, phone, address, is_admin, password, id) => {
+      updateUserData: async (
+        email,
+        phone,
+        address,
+        is_admin,
+        password,
+        id,
+        photoUrl,
+        firstname,
+        lastname
+      ) => {
         const actions = getActions();
         try {
           const req = await axios.put(
@@ -153,6 +202,9 @@ const getState = ({ getStore, getActions, setStore }) => {
               address,
               is_admin,
               password,
+              photoUrl, // Ajoutez la photoUrl à la requête
+              firstname, // Ajoutez le firstname à la requête
+              lastname, // Ajoutez le lastname à la requête
               id,
             },
             config
@@ -187,12 +239,22 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error deleting user", error);
         }
       },
+      logout: () => {
+        const store = getStore();
+        let token = Cookies.remove("jwt");
+        setStore({
+          ...store,
+          isAuth: false,
+          response: { type: "success", message: "Successful logout." },
+        });
+        return token != null ? true : false;
+      },
 
-      /**************************
+      /****************************************************************************************
      
-      PROGRAMS FUNCTIONS
+      *************************************PROGRAMS FUNCTIONS
 
-       *************************/
+       ***************************************************************************************/
 
       createProgram: async (
         name,
@@ -217,7 +279,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error creating program:", error);
-          throw error;
         }
       },
       updateProgram: async (
@@ -236,7 +297,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error updating program:", error);
-          throw error;
         }
       },
       deleteProgram: async (id) => {
@@ -245,7 +305,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           return response.data;
         } catch (error) {
           console.error("Error deleting program:", error);
-          throw error;
         }
       },
       getAllPrograms: async () => {
@@ -268,14 +327,15 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error getting program:", error);
           return error;
+
         }
       },
 
-      /**************************
+      /******************************************************************************************
      
-      PLANS FUNCTIONS
+      ****************************************PLANS FUNCTIONS
 
-       *************************/
+       *****************************************************************************************/
 
       subscribePlan: async (
         id,
@@ -303,6 +363,136 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data.message;
         } catch (error) {
           console.error("Error subscribing to", error);
+        }
+      },
+
+      /******************************************************************************************
+       *
+       ***************************************** RECIPES FUNCTIONS
+       *
+       *******************************************************************************************/
+
+      createRecipe: async (name, description, ingredients, objective) => {
+        try {
+          const response = await axios.post(
+            `${API}/create-recipe`,
+            { name, description, ingredients, objective },
+            config
+          );
+          if (response.status === 201) {
+            console.log("recipe created successfully");
+            return response.data;
+          }
+        } catch (error) {
+          console.error("error creating recipe from flux", error);
+        }
+      },
+      getAllRecipes: async () => {
+        try {
+          const response = await axios.get(`${API}//get-all-recipes`, config);
+          const data = response.data;
+          const store = getStore();
+          setStore({ ...store, recipes: data.recipes });
+          return data.recipes;
+        } catch (error) {
+          console.error("Error getting recipes", error);
+        }
+      },
+      getRecipeById: async (id) => {
+        try {
+          const res = await axios.get(`${API}/get-recipe/${id}`, config);
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, recipeData: data.recipe });
+          return data.recipe;
+        } catch (error) {
+          console.error("Error getting your recipe", error);
+        }
+      },
+      deleteRecipe: async (recipeId) => {
+        try {
+          const response = await axios.delete(
+            `${API}/delete-recipe/${recipeId}`,
+            config
+          );
+          console.log(response);
+          if (response.status === 200) {
+            setStore((prevStore) => {
+              const updatedRecipes = prevStore.recipes.filter(
+                (recipe) => recipe.id !== recipeId
+              );
+              // actions.showNotification("User deleted successfully", "success");
+              console.log("deleted FROM FLUX");
+              return { ...prevStore, recipes: updatedRecipes };
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting user", error);
+        }
+      },
+      editRecipe: async (name, description, ingredients, objective, id) => {
+        try {
+          const response = await axios.put(
+            `${API}/update-recipe/${id}`,
+            { name, description, ingredients, objective, id },
+            config
+          );
+          if (response.status === 200) {
+            return response;
+          }
+        } catch (error) {
+          console.log("Error updating recipe", error);
+        }
+      },
+      /*****************************************************************************************
+       *
+       ************************************* FAVORITES ROUTES
+       *
+       *****************************************************************************************/
+      addFavoriteRecipe: async (userId, recipeId) => {
+        const actions = getActions();
+        try {
+          const res = await axios.post(
+            `${API}/add-favorite-recipe`,
+            { userId, recipeId },
+            config
+          );
+          await actions.getFavoritedRecipes();
+        } catch (error) {
+          console.error("error adding favorite recipe", error);
+        }
+      },
+      deleteFavoritedRecipe: async (recipeId) => {
+        try {
+          const response = await axios.delete(
+            `${API}/delete-favorite-recipe/${recipeId}`,
+            config
+          );
+          if (response.status === 200) {
+            const store = getStore();
+            const updatedFavRecipes = store.favoritedRecipes.filter(
+              (recipe) => recipe.id !== recipeId
+            );
+
+            setStore({ ...store, favoritedRecipes: updatedFavRecipes });
+            console.log("favorite recipe deleted");
+          }
+        } catch (error) {
+          console.error("Error deleting favorited recipe", error);
+        }
+      },
+      getFavoritedRecipes: async () => {
+        try {
+          const res = await axios.get(
+            `${API}/get-all-favorite-recipes`,
+            config
+          );
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, favoritedRecipes: data.result });
+          return data.result;
+        } catch (error) {
+          console.error("error getting favorited recipes", error);
         }
       },
     },

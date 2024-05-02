@@ -3,6 +3,7 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/AppContext";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { store, actions } = useContext(Context);
@@ -60,7 +61,7 @@ const Login = () => {
             <a href="#">Forgot Password?</a>
           </span>
           <span className="forgot-password">
-            <a href="#">Don't you have an account? Sign Up</a>
+            <Link to="/register">Don't you have an account? Sign Up</Link>
           </span>
         </div>
         <input value="Sign In" type="submit" className="login-button" />

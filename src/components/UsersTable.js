@@ -1,10 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/AppContext";
+import { useNavigate } from "react-router-dom";
+import ConfirmAlertDelete from "./ConfirmAlertDelete";
 
 const UsersTable = () => {
   const { store, actions } = useContext(Context);
   const [users, setUsers] = useState(store.users);
+  const API = "http://localhost:5000/uploads/";
+  let navigate = useNavigate();
 
   const getAllUsersAndPlans = async () => {
     try {
@@ -31,17 +35,22 @@ const UsersTable = () => {
     }
   }, [store.user.id, users]);
 
+  const handleEdit = (user) => {
+    navigate(`/edit-user/${user.user_id}`, { state: { userData: user } });
+  };
+
   return (
     <>
       {store.user.is_admin ? (
         <section style={{ textAlign: "center" }}>
           <div>
+            <div>
+              <h1>Users</h1>
+            </div>
             <table>
               <thead>
                 <tr>
-                  <th>Users</th>
-                </tr>
-                <tr>
+                  <th></th>
                   <th>firstname</th>
                   <th>lastname</th>
                   <th>phone</th>
@@ -57,6 +66,17 @@ const UsersTable = () => {
                 {store.users?.length > 0 &&
                   store.users.map((user) => (
                     <tr key={user.id}>
+                      <td>
+                        <img
+                          src={
+                            user.photo_url.startsWith("http")
+                              ? user.photo_url
+                              : API + user.photo_url
+                          }
+                          alt="user_image"
+                          width="50"
+                        />
+                      </td>
                       <td>{user.firstname}</td>
                       <td>{user.lastname}</td>
                       <td>{user.phone}</td>
@@ -66,8 +86,15 @@ const UsersTable = () => {
                       <td>{user.plan}</td>
                       <td>{user.expires_date}</td>
                       <td>
-                        <button onClick={() => handleDelete(user.user_id)}>
-                          X
+                        <ConfirmAlertDelete
+                          onConfirm={() => handleDelete(user.user_id)}
+                          message={`Are you sure you want to delete ${user.firstname} ${user.lastname} ?`}
+                        />
+                        <button
+                          className="btn-table"
+                          onClick={() => handleEdit(user)}
+                        >
+                          &#9998;
                         </button>
                       </td>
                     </tr>
