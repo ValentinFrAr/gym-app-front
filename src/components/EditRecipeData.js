@@ -4,7 +4,7 @@ import { Context } from "../store/AppContext";
 import { useLocation, useNavigate } from "react-router";
 
 const EditRecipeData = () => {
-  const { actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const { recipeData } = useLocation().state;
   const navigate = useNavigate();
 
@@ -67,79 +67,100 @@ const EditRecipeData = () => {
     setSteps((prevSteps) => prevSteps + ",");
   };
 
+  const filteredRecipeByUserId = store.recipes.filter((recipe) => {
+    if (store.user.is_admin) {
+      return true;
+    }
+    return recipe.user_id === store.user.id;
+  });
+
   return (
-    <div className="card-recipe">
-      <div key={recipeData.id}>
-        <form onSubmit={handleSubmit}>
-          <h3>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </h3>
-          <label htmlFor="objective">
-            Objective:
-            <select
-              id="objective"
-              value={objective}
-              onChange={(e) => setObjective(e.target.value)}
-              required
-            >
-              <option value="">Select Objective</option>
-              <option value="mass gain">Mass Gain</option>
-              <option value="cutting">Cutting</option>
-              <option value="strength">Strength</option>
-              <option value="Physical maintenance">Physical Maintenance</option>
-            </select>
-          </label>
-          <h4>Ingredients:</h4>
-          <ul>
-            {ingredients.split(",").map((ingredient, index) => (
-              <li key={index}>
+    <>
+      {filteredRecipeByUserId && filteredRecipeByUserId.length > 0 ? (
+        <div className="card-recipe">
+          <div key={recipeData.id}>
+            <form onSubmit={handleSubmit}>
+              <h3>
                 <input
                   type="text"
-                  value={ingredient}
-                  onChange={(event) =>
-                    handleIngredientChange(index, event.target.value)
-                  }
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
-                <button
-                  type="button"
-                  onClick={() => handleIngredientRemove(index)}
+              </h3>
+              <label htmlFor="objective">
+                Objective:
+                <select
+                  id="objective"
+                  value={objective}
+                  onChange={(e) => setObjective(e.target.value)}
+                  required
                 >
-                  Remove
+                  <option value="">Select Objective</option>
+                  <option value="mass gain">Mass Gain</option>
+                  <option value="cutting">Cutting</option>
+                  <option value="strength">Strength</option>
+                  <option value="Physical maintenance">
+                    Physical Maintenance
+                  </option>
+                </select>
+              </label>
+              <h4>Ingredients:</h4>
+              <ul>
+                {ingredients.split(",").map((ingredient, index) => (
+                  <li key={index}>
+                    <input
+                      type="text"
+                      value={ingredient}
+                      onChange={(event) =>
+                        handleIngredientChange(index, event.target.value)
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleIngredientRemove(index)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+                <button type="button" onClick={handleAddIngredient}>
+                  Add
                 </button>
-              </li>
-            ))}
-            <button type="button" onClick={handleAddIngredient}>
-              Add
-            </button>
-          </ul>
-          <h4>Steps:</h4>
-          <ol>
-            {steps.split(",").map((step, index) => (
-              <li key={index}>
-                <input
-                  type="text"
-                  value={step}
-                  onChange={(event) =>
-                    handleStepChange(index, event.target.value)
-                  }
-                />
-                <button type="button" onClick={() => handleStepRemove(index)}>
-                  Remove
+              </ul>
+              <h4>Steps:</h4>
+              <ol>
+                {steps.split(",").map((step, index) => (
+                  <li key={index}>
+                    <input
+                      type="text"
+                      value={step}
+                      onChange={(event) =>
+                        handleStepChange(index, event.target.value)
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleStepRemove(index)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+                <button type="button" onClick={handleAddStep}>
+                  Add
                 </button>
-              </li>
-            ))}
-            <button type="button" onClick={handleAddStep}>
-              Add
-            </button>
-          </ol>
-          <input type="submit" value="Edit" />
-        </form>
-      </div>
-    </div>
+              </ol>
+              <input type="submit" value="Edit" />
+            </form>
+          </div>
+        </div>
+      ) : (
+        <h1>
+          ACCESS DENIED, YOUR COMPUTER WILL BE EXPLOSE IN 5... 4... 3... 2...
+          1... BOOM
+        </h1>
+      )}
+    </>
   );
 };
 

@@ -74,7 +74,7 @@ const UsersTable = () => {
                               : API + user.photo_url
                           }
                           alt="user_image"
-                          width="50"
+                          className="user-img"
                         />
                       </td>
                       <td>{user.firstname}</td>
