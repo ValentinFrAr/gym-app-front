@@ -21,6 +21,9 @@ const getState = ({ getStore, getActions, setStore }) => {
       users: [],
       userData: {},
       isAuth: false,
+      plan: [],
+      programs: [],
+      programById: [],
       plans: [],
       recipes: [],
       recipeData: {},
@@ -276,7 +279,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error creating program:", error);
         }
       },
-      modificateProgram: async (
+      updateProgram: async (
         id,
         name,
         description,
@@ -286,7 +289,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const response = axios.put(
             `${API}/modificate-program/${id}`,
-            { name, description, weekly_routine, duration_program },
+            { id, name, description, weekly_routine, duration_program },
             config
           );
           return response.data;
@@ -302,9 +305,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error deleting program:", error);
         }
       },
-      getAllPrograms: async (id) => {
+      getAllPrograms: async () => {
         try {
-          const response = axios.get(`${API}/get-all-programs`);
+          const response = await axios.get(`${API}/get-all-programs`);
+          console.log(response);
+          const store = getStore();
+          setStore({ ...store, programs: response.data.programs });
           return response.data;
         } catch (error) {
           console.error("Error getting all programs:", error);
@@ -313,9 +319,13 @@ const getState = ({ getStore, getActions, setStore }) => {
       getProgram: async (id) => {
         try {
           const response = axios.get(`${API}/get-program/${id}`);
+          const store = getStore();
+          setStore({ ...store, programById: response.data.program });
           return response.data;
         } catch (error) {
           console.error("Error getting program:", error);
+          return error;
+
         }
       },
 

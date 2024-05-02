@@ -15,6 +15,12 @@ const Home = () => {
       <button onClick={() => navigate(`/users`)}>Go To Users Table</button>
       <br />
       <br />
+      <button onClick={() => navigate(`/new-program`)}>Go To New Program</button>
+      <br />
+      <br />
+      <button onClick={() => navigate(`/get-all-programs`)}>View all programs</button>
+      <br />
+      <br />
       <button onClick={() => navigate(`/recipe`)}>Go To Create Recipe</button>
       <br />
       <br />
