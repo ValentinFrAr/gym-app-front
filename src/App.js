@@ -10,6 +10,7 @@ import CreateRecipeForm from "./components/CreateRecipeForm";
 import AllRecipes from "./components/AllRecipes";
 import EditRecipeData from "./components/EditRecipeData";
 import Navbar from "./components/Navbar";
+import UserSettings from "./views/UserSettings";
 
 function App() {
   const basename = process.env.BASENAME || "";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/recipes" element={<AllRecipes />} />
         <Route path="/edit-user/:id" element={<UpdateUserData />} />
         <Route path="/edit-recipe/:id" element={<EditRecipeData />} />
+        <Route path="/user" element={<UserSettings />} />
       </Routes>
     </BrowserRouter>
   );

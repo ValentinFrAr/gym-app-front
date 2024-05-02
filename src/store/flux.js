@@ -155,9 +155,9 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
         }
       },
-      getUserData: async (id) => {
+      getUserData: async () => {
         try {
-          const response = await axios.get(`${API}/user/${id}`, config);
+          const response = await axios.get(`${API}/user`, config);
           const data = response.data;
           const store = getStore();
           const decodedToken = jwtDecode(data.token);
@@ -185,7 +185,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         is_admin,
         password,
         id,
-        photoUrl,
         firstname,
         lastname
       ) => {
@@ -199,9 +198,8 @@ const getState = ({ getStore, getActions, setStore }) => {
               address,
               is_admin,
               password,
-              photoUrl, // Ajoutez la photoUrl à la requête
-              firstname, // Ajoutez le firstname à la requête
-              lastname, // Ajoutez le lastname à la requête
+              firstname,
+              lastname,
               id,
             },
             config

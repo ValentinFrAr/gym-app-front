@@ -1,16 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import UserImage from "../components/UserImage";
 
 const Home = () => {
   let navigate = useNavigate();
   return (
     <div>
-      <h1>Home Page</h1>
-      <UserImage />
-      <br />
-      <br />
-      <button onClick={() => navigate("/login")}>Go To Login</button>
+      <button onClick={() => navigate(`/user`)}>Go To User Settings</button>
+
       <br />
       <br />
       <button onClick={() => navigate(`/register`)}>Go To Register</button>

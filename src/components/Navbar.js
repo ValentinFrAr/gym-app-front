@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Context } from "../store/AppContext";
+import DropMenu from "./DropMenu";
+import LoginButton from "./LoginButton";
 
 const Navbar = () => {
-  const { actions } = useContext(Context);
+  const { store } = useContext(Context);
   let navigate = useNavigate();
-  function logout() {
-    actions.logout();
-    navigate("/");
-    window.location.reload();
-  }
+
   return (
     <div>
       <div>
@@ -21,14 +19,9 @@ const Navbar = () => {
             onClick={() => navigate("/")}
             style={{ cursor: "pointer", fontSize: "2rem" }}
           >
-            home
+            Home
           </li>
-          <li
-            onClick={logout}
-            style={{ cursor: "pointer", fontSize: "2rem", color: "red" }}
-          >
-            logout
-          </li>
+          <li>{store.user.id ? <DropMenu /> : <LoginButton />}</li>
         </ul>
       </div>
     </div>

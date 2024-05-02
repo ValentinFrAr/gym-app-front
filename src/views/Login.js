@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-  const { store, actions } = useContext(Context);
+  const { actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let navigate = useNavigate();
