@@ -22,6 +22,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       userData: {},
       isAuth: false,
       plan: [],
+      programs: [],
+      programById: [],
     },
     actions: {
       showNotification: async (message, type) => {
@@ -218,7 +220,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           throw error;
         }
       },
-      modificateProgram: async (
+      updateProgram: async (
         id,
         name,
         description,
@@ -228,7 +230,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const response = axios.put(
             `${API}/modificate-program/${id}`,
-            { name, description, weekly_routine, duration_program },
+            { id, name, description, weekly_routine, duration_program },
             config
           );
           return response.data;
@@ -246,22 +248,26 @@ const getState = ({ getStore, getActions, setStore }) => {
           throw error;
         }
       },
-      getAllPrograms: async (id) => {
+      getAllPrograms: async () => {
         try {
-          const response = axios.get(`${API}/get-all-programs`);
+          const response = await axios.get(`${API}/get-all-programs`);
+          console.log(response);
+          const store = getStore();
+          setStore({ ...store, programs: response.data.programs });
           return response.data;
         } catch (error) {
           console.error("Error getting all programs:", error);
-          throw error;
         }
       },
       getProgram: async (id) => {
         try {
           const response = axios.get(`${API}/get-program/${id}`);
+          const store = getStore();
+          setStore({ ...store, programById: response.data.program });
           return response.data;
         } catch (error) {
           console.error("Error getting program:", error);
-          throw error;
+          return error;
         }
       },
 
