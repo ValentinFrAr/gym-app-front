@@ -134,7 +134,7 @@ const UserDataSettings = () => {
             onClick={() => setEditPass(true)}
             value="Change Password"
             type="submit"
-            className="login-button"
+            className="login-button cancel-button"
           />
         ) : (
           <div>
@@ -151,7 +151,7 @@ const UserDataSettings = () => {
               onClick={() => setEditPass(false)}
               value="Cancel"
               type="submit"
-              className="login-button"
+              className="login-button cancel-button"
             />
           </div>
         )}

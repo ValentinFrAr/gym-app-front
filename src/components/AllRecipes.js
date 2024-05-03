@@ -56,15 +56,25 @@ const AllRecipes = () => {
             <p>Objective: {recipe.recipe_objective}</p>
             <h4>Ingredients:</h4>
             <ul>
-              {recipe.ingredients.split(",").map((ingredient, index) => (
-                <li key={index}>{ingredient.trim()}</li>
-              ))}
+              {recipe.ingredients.includes(",") ? ( // Vérifie la présence de la virgule
+                recipe.ingredients
+                  .split(",")
+                  .map((ingredient, index) => (
+                    <li key={index}>{ingredient.trim()}</li>
+                  ))
+              ) : (
+                <li>{recipe.ingredients.trim()}</li> // Affiche l'ingrédient tel quel s'il n'y a pas de virgule
+              )}
             </ul>
             <h4>Steps:</h4>
             <ol>
-              {recipe.recipe_description.split(",").map((step, index) => (
-                <li key={index}>{step.trim()}</li>
-              ))}
+              {recipe.recipe_description.includes(",") ? ( // Vérifie la présence de la virgule
+                recipe.recipe_description
+                  .split(",")
+                  .map((step, index) => <li key={index}>{step.trim()}</li>)
+              ) : (
+                <li>{recipe.recipe_description.trim()}</li> // Affiche l'étape telle quelle s'il n'y a pas de virgule
+              )}
             </ol>
             <div>
               <ConfirmAlertDelete
