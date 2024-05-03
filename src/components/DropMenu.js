@@ -38,6 +38,7 @@ const DropMenu = () => {
       {open && (
         <div
           ref={menuRef}
+          onMouseLeave={() => setOpen(false)}
           style={{ position: "absolute", left: "30px", top: "120px" }}
         >
           <ul>

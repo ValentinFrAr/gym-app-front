@@ -156,3 +156,11 @@
     var(--color-2) 100%
   );
 }
+
+.form .cancel-button{
+  background: linear-gradient(
+    45deg,
+    var(--color-5) 0%,
+    var(--color-5) 100%
+  );
+}
