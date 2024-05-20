@@ -24,10 +24,10 @@ const ViewProgram = () => {
         weeklyRoutine,
         duration
       );
-      alert("Program successfully updated");
+      console.log("Program successfully updated");
       navigate("/get-all-programs");
     } catch (error) {
-      alert("error");
+      console.error("error");
     }
   };
 

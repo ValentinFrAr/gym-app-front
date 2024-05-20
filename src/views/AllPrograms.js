@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/AppContext";
 import { useNavigate } from "react-router";
 
@@ -15,9 +16,9 @@ const AllPrograms = () => {
   const AllPrograms = async () => {
     try {
       const req = await actions.getAllPrograms();
-      alert(`${req.message}`);
+      console.log(`${req.message}`);
     } catch (error) {
-      alert("connection failed", error);
+      console.error("connection failed", error);
     }
   };
 
@@ -30,10 +31,10 @@ const AllPrograms = () => {
   const handleDelete = async (id) => {
     try {
       const req = await actions.deleteProgram(id);
-      alert(`delete success`);
+      console.log(`delete success`);
       window.location.reload();
     } catch (error) {
-      alert("connection failed", error);
+      console.error("connection failed", error);
     }
   };
 
@@ -65,6 +66,15 @@ const AllPrograms = () => {
               <li style={{ width: "350px" }}>
                 Description: {program.description}
               </li>
+              <button
+                onClick={() =>
+                  navigate(`/program/${program.id}/create-routine`, {
+                    state: { programId: program.id },
+                  })
+                }
+              >
+                Edit routine
+              </button>
               <button onClick={() => onEdit(program)}> EDIT</button>
               <button onClick={() => handleDelete(program.id)}> DELETE</button>
             </div>
