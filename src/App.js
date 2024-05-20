@@ -14,7 +14,7 @@ import AllRecipes from "./components/AllRecipes";
 import EditRecipeData from "./components/EditRecipeData";
 import Navbar from "./components/Navbar";
 import UserSettings from "./views/UserSettings";
-
+import CreateRoutineForProgram from "./components/CreateRoutineForProgram";
 
 function App() {
   const basename = process.env.BASENAME || "";
@@ -29,13 +29,17 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/users" element={<UsersTable />} />
         <Route path="/new-program" element={<NewProgram />} />
-        <Route path="/get-all-programs" element={<AllPrograms/>}/>
-        <Route path="/view-program/:id" element={<ViewProgram/>}/>
+        <Route path="/get-all-programs" element={<AllPrograms />} />
+        <Route path="/view-program/:id" element={<ViewProgram />} />
         <Route path="/recipe" element={<CreateRecipeForm />} />
         <Route path="/recipes" element={<AllRecipes />} />
         <Route path="/edit-user/:id" element={<UpdateUserData />} />
         <Route path="/edit-recipe/:id" element={<EditRecipeData />} />
         <Route path="/user" element={<UserSettings />} />
+        <Route
+          path="/program/:id/create-routine"
+          element={<CreateRoutineForProgram />}
+        />
       </Routes>
     </BrowserRouter>
   );

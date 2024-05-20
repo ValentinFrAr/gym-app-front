@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/AppContext";
+import { useNavigate } from "react-router";
 
 const NewProgram = () => {
   const { store, actions } = useContext(Context);
@@ -8,8 +10,10 @@ const NewProgram = () => {
   const [description, setDescription] = useState("");
   const [weeklyRoutine, setWeeklyRoutine] = useState("");
   const [durationProgram, setDurationProgram] = useState("");
+  let navigate = useNavigate();
 
-  const createProgram = async () => {
+  const createProgram = async (e) => {
+    e.preventDefault();
     try {
       const req = await actions.createProgram(
         name,
@@ -18,9 +22,10 @@ const NewProgram = () => {
         durationProgram,
         store.user.id
       );
-      if (req !== undefined) {
-        return alert(req.message);
-      }
+      navigate(`/program/${req.program}/create-routine`, {
+        state: { programId: req.program },
+      });
+      return console.log(req.message);
     } catch (error) {
       console.error("Connection failed to create new program", error);
     }

@@ -17,18 +17,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
   return {
     store: {
-      user: [],
-      users: [],
-      userData: {},
-      isAuth: false,
-      plan: [],
-      programs: [],
-      programById: [],
+      user: [], // data user logged
+      users: [], // data all users
+      userData: {}, // data user By Id
+      isAuth: false, // verifying token
+      plan: [], //
+      programs: [], // data all programs
+      programById: [], // program by id
+      routinesByProgramId: [],
       plans: [],
-      recipes: [],
-      recipeData: {},
-      favoritedRecipes: [],
-      usersImage: {},
+      recipes: [], // all recipes data
+      recipeData: {}, // data recipe by ID
+      favoritedRecipes: [], // favorited recipes
+      usersImage: {}, // user image
+      exercises: [],
+      exerciseByRoutineId: [],
     },
     actions: {
       showNotification: async (message, type) => {
@@ -325,7 +328,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error getting program:", error);
           return error;
-
         }
       },
 
@@ -425,7 +427,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             });
           }
         } catch (error) {
-          console.error("Error deleting user", error);
+          console.error("Error deleting recipe", error);
         }
       },
       editRecipe: async (name, description, ingredients, objective, id) => {
@@ -491,6 +493,100 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data.result;
         } catch (error) {
           console.error("error getting favorited recipes", error);
+        }
+      },
+      /*************************************************************************************
+       *
+       * ************************* ROUTINES FUNCTIONS
+       *
+       ************************************************************************************/
+      createRoutine: async (programId, name, description, userCalendar) => {
+        const actions = getActions();
+        try {
+          const response = await axios.post(
+            `${API}/create-routine`,
+            { programId, name, description, userCalendar },
+            config
+          );
+          return response.data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      routineByProgramId: async (programId) => {
+        try {
+          const res = await axios.get(
+            `${API}/get-routine-by-program/${programId}`,
+            config
+          );
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, routinesByProgramId: data.routines });
+          return data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      deleteRoutine: async (id) => {
+        try {
+          const res = await axios.delete(`${API}/delete-routine/${id}`, config);
+          if (res.status === 200) {
+            setStore((prevStore) => {
+              const updatedRoutine = prevStore.routinesByProgramId.filter(
+                (routine) => routine.id !== id
+              );
+              // actions.showNotification("User deleted successfully", "success");
+              console.log("deleted FROM FLUX");
+              return { ...prevStore, routinesByProgramId: updatedRoutine };
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting routine", error);
+        }
+      },
+
+      /*****************************************************************************
+       *
+       * ***************************EXERCISES FUNCTIONS*****************************
+       *
+       *****************************************************************************/
+      getExercises: async () => {
+        try {
+          const res = await axios.get(`${API}/get-all-exercises`);
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, exercises: data.exercises });
+          return data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      addExerciseToRoutine: async (
+        routineId,
+        exerciseId,
+        sets,
+        repetitions
+      ) => {
+        try {
+          const res = await axios.post(
+            `${API}/add-exercise-routine`,
+            { routineId, exerciseId, sets, repetitions },
+            config
+          );
+          return res.data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      getExerciseByRoutineId: async (routineId) => {
+        try {
+          const res = await axios.get(`${API}/get-exercise-routine`);
+          const data = res.data;
+          const store = getStore();
+          setStore({ ...store, exerciseByRoutineId: data.result });
+          return data;
+        } catch (error) {
+          console.error(error);
         }
       },
     },
