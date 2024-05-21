@@ -47,31 +47,32 @@ const UserDataSettings = () => {
 
   return (
     <div>
-      <h1>USER DATA</h1>
       <form
         className="form"
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
         <div style={{ display: "flex" }}>
-          <div>
-            <label htmlFor="firstname">First Name:</label>
+          <div style={{ width: "50%" }}>
+            <label htmlFor="firstname">Firstname:</label>
             <input
               id="firstname"
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="text"
               placeholder="John"
               defaultValue={store.userData.firstname}
               readOnly
             />
           </div>
-          <div>
-            <label htmlFor="lastname">Last Name:</label>
+          <div style={{ width: " 50%" }}>
+            <label htmlFor="lastname">Lastname:</label>
             <input
               id="lastname"
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="text"
               placeholder="Doe"
               defaultValue={store.userData.lastname}
@@ -80,24 +81,26 @@ const UserDataSettings = () => {
           </div>
         </div>
         <div style={{ display: "flex" }}>
-          <div>
+          <div style={{ width: "50%" }}>
             <label htmlFor="phone">Phone:</label>
             <input
               id="phone"
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="text"
               placeholder="+1123456789"
               value={phone || store.userData.phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
-          <div>
+          <div style={{ width: " 50%" }}>
             <label htmlFor="email">Email:</label>
             <input
               id="email"
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="email"
               placeholder="Email@email.com"
               value={email || store.userData.email}
@@ -106,23 +109,25 @@ const UserDataSettings = () => {
           </div>
         </div>
         <div style={{ display: "flex" }}>
-          <div>
+          <div style={{ width: " 50%" }}>
             <label htmlFor="address">Address:</label>
             <input
               id="address"
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="text"
               placeholder="123 main street"
               value={address || store.userData.address}
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div>
+          <div style={{ width: " 50%" }}>
             <label>Plan:</label>
             <input
               autoComplete="off"
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
               type="text"
               defaultValue={store.userData.plan}
               readOnly
@@ -131,6 +136,7 @@ const UserDataSettings = () => {
         </div>
         {!editPass ? (
           <input
+            style={{ width: "100%" }}
             onClick={() => setEditPass(true)}
             value="Change Password"
             type="submit"
@@ -145,7 +151,8 @@ const UserDataSettings = () => {
               placeholder="New Password"
               value={"" || password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input"
+              className="input input-user-setting"
+              style={{ marginLeft: "0", marginRight: "0" }}
             />
             <input
               onClick={() => setEditPass(false)}

@@ -1,0 +1,42 @@
+.profile-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5rem;
+  width: 90%;
+}
+
+.upload-icon {
+  cursor: pointer;
+  display: inline-block;
+  color: #000;
+  margin-top: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 35px;
+  z-index: 9999;
+  border-radius: 50%;
+}
+
+.upload-icon:hover {
+  color: #007bff;
+}
+
+.btn-save{
+  background-color: var(--color-5);
+  transition: all .3s;
+  border-radius: 40px;
+  padding: 5px 15px;
+}
+
+.btn-save:hover{
+  transition: all .3s;
+  background-color: var(--color-5);
+  opacity: .7;
+  cursor: pointer;
+}
+
+.input-user-setting{
+  width: 30%;
+}
