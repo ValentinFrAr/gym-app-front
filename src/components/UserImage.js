@@ -22,7 +22,7 @@ const UserImage = ({ open, setOpen, imgRef }) => {
       {store.userData && store.userData.photo_url ? (
         <div>
           <img
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", borderRadius: "50%" }}
             onMouseEnter={() => setOpen(true)}
             ref={imgRef}
             src={
@@ -31,19 +31,19 @@ const UserImage = ({ open, setOpen, imgRef }) => {
                 : API + store.userData.photo_url
             }
             alt="User"
-            width="150"
-            className="user-img"
+            width="70"
+            height="70"
           />
         </div>
       ) : (
         <>
           <img
+            style={{ cursor: "pointer", borderRadius: "50%" }}
             onMouseEnter={() => setOpen(true)}
             ref={imgRef}
             src="https://i.blogs.es/089869/superman-legacy-2025/840_560.jpeg"
             alt="User"
-            width="150"
-            className="user-img"
+            width="70"
           />
         </>
       )}

@@ -10,16 +10,20 @@ const Navbar = () => {
 
   return (
     <div>
+      <div>{/* <img src={logo} alt="logo gym" /> */}</div>
       <div>
-        <img src="" alt="" />
-      </div>
-      <div>
-        <ul style={{ display: "flex", justifyContent: "space-evenly" }}>
+        <ul
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
           <li
             onClick={() => navigate("/")}
             style={{ cursor: "pointer", fontSize: "2rem" }}
           >
-            Home
+            HOME
           </li>
           <li>{store.user.id ? <DropMenu /> : <LoginButton />}</li>
         </ul>

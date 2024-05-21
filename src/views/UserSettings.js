@@ -8,14 +8,17 @@ const UserSettings = () => {
   const { store, actions } = useContext(Context);
 
   return (
-    <div>
+    <main className="profile-content">
+      <div>
+        <h1>Profile</h1>
+      </div>
       <div>
         <UserImageSetting />
       </div>
-      <div>
+      <div style={{ width: "60%" }}>
         <UserDataSettings />
       </div>
-    </div>
+    </main>
   );
 };
 
