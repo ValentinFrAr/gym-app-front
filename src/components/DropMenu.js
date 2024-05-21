@@ -26,7 +26,7 @@ const DropMenu = () => {
 
   const handleMenuItemClick = (i) => {
     if (i === "Logout") logout();
-    if (i === "Profile") navigate();
+    if (i === "Profile") navigate("/profile");
     if (i === "Favorites") navigate();
     if (i === "Settings") navigate();
     setOpen(false);
