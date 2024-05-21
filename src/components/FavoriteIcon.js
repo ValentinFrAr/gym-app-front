@@ -2,31 +2,36 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/AppContext";
 
-const FavoriteIcon = ({ recipeId, userId }) => {
+const FavoriteIcon = ({ recipeId }) => {
   const { store, actions } = useContext(Context);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const checkInitialFavorite = async () => {
-      await actions.getFavoritedRecipes();
+      if (recipeId) {
+        await actions.getFavoritedRecipes();
 
-      if (store.favoritedRecipes.some((fav) => fav.recipe_id === recipeId)) {
-        setIsFavorite(true);
-      } else {
-        setIsFavorite(false);
+        if (store.favoritedRecipes.some((fav) => fav.recipe_id === recipeId)) {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
       }
     };
-
     checkInitialFavorite();
   }, [store.user.id]);
 
   const addFavorite = async () => {
-    await actions.addFavoriteRecipe(store.user.id, recipeId);
+    if (recipeId) {
+      await actions.addFavoriteRecipe(store.user.id, recipeId);
+    }
     setIsFavorite(true);
   };
 
   const removeFavorite = async () => {
-    await actions.deleteFavoritedRecipe(recipeId);
+    if (recipeId) {
+      await actions.deleteFavoritedRecipe(recipeId);
+    }
     setIsFavorite(false);
   };
 

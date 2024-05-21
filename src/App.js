@@ -35,7 +35,7 @@ function App() {
         <Route path="/recipes" element={<AllRecipes />} />
         <Route path="/edit-user/:id" element={<UpdateUserData />} />
         <Route path="/edit-recipe/:id" element={<EditRecipeData />} />
-        <Route path="/user" element={<UserSettings />} />
+        <Route path="/profile" element={<UserSettings />} />
         <Route
           path="/program/:id/create-routine"
           element={<CreateRoutineForProgram />}
